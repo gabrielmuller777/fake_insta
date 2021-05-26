@@ -1,6 +1,8 @@
 from django.urls import path
-from . import views
+from django.conf.urls import include
+from .views import dashboard
 
 urlpatterns = [
-    path('', views.esbelus, name='index')
+    path('dashboard/', dashboard, name='dashboard'),
+    path('accounts/',include('django.contrib.auth.urls'))
 ]

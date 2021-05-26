@@ -5,11 +5,8 @@ from django.http import HttpResponse
 from .users.forms import RegisterForm
 # Create your views here.
 
-def index(request):
-    return HttpResponse("Hello World")
-
-def esbelus(request):
-    return HttpResponse("Outra mensagem")
+def dashboard(request):
+    return render(request, 'users/dashboard.html')
 
 def register(request):
     if request.method == 'GET':
