@@ -12,3 +12,10 @@ You can activate the python environment by running the following command:
 source mypython/bin/activate
 ## Windows
 mypthon\Scripts\activate
+
+## smtp server
+(venv) $ python -m smtpd -n -c DebuggingServer localhost:1025
+
+Start a simple smtp server to view messages related to password reset emails
+in the terminal.
+
