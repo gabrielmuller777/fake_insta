@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+#   db_1:
+#     image: postgres
+#     ports:
+#       - '5432'
+#     environment:
+#       - POSTGRES_DB=db
+#       - POSTGRES_USER=postgres
+#       - POSTGRES_PASSWORD=postgres
+  fake_insta:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: python3 manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    # depends_on:
+    #   - db_1
+    # links:
+    #   - db_1:db_1
