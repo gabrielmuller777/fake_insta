@@ -1,8 +1,8 @@
+from django.http.response import HttpResponse
 from django.shortcuts import redirect,render
 from django.contrib.auth import login
 from django.urls import reverse
-from django.http import HttpResponse
-from .users.forms import RegisterForm
+from .users.forms import RegisterForm, EditProfileForm
 # Create your views here.
 
 def dashboard(request):
@@ -20,3 +20,17 @@ def register(request):
             user = form.save()
             login(request, user)
             return redirect(reverse('dashboard'))
+
+def editProfile(request):
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST, instance=request.user)
+
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')
+        else:
+            return render(request, 'users/edit_profile.html', {'form': form})
+
+    else:
+        form = EditProfileForm(instance=request.user)
+        return render(request, 'users/edit_profile.html', {'form':form})
