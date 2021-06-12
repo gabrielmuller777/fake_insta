@@ -3,10 +3,13 @@ from django.shortcuts import redirect,render
 from django.contrib.auth import login
 from django.urls import reverse
 from .users.forms import RegisterForm, EditProfileForm
+from django.views.generic import ListView, DetailView, CreateView
+from .models import Post
 # Create your views here.
 
-def dashboard(request):
-    return render(request, 'users/dashboard.html')
+class HomeView(ListView):
+    model = Post
+    template_name = 'users/dashboard.html'
 
 def register(request):
     if request.method == 'GET':
@@ -28,9 +31,11 @@ def editProfile(request):
         if form.is_valid():
             form.save()
             return redirect('dashboard')
-        else:
-            return render(request, 'users/edit_profile.html', {'form': form})
 
     else:
         form = EditProfileForm(instance=request.user)
         return render(request, 'users/edit_profile.html', {'form':form})
+
+#class AddPostView(CreateView):
+#    model = Post
+#    template_name = 'add_post.html'
