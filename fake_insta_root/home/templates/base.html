@@ -14,13 +14,16 @@
       crossorigin="anonymous"
     />
 
-    <title>IsntGram</title>
+    <title>Isn'tGram</title>
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'dashboard' %}">IsntGram</a>
+        <a class="navbar-brand" href="{% url 'dashboard' %}">
+          <img src="{% static 'ig.png' %}" alt="" width="24" height="24" class="d-inline-block align-text-top">
+        Isn'tGram
+        </a>
         <button
           class="navbar-toggler"
           type="button"
