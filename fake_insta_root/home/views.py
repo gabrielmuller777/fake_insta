@@ -1,8 +1,8 @@
 from django.http import request
-from django.http.response import HttpResponse
-from django.shortcuts import redirect,render
+from django.http.response import HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect,render, get_object_or_404
 from django.contrib.auth import login
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from .users.forms import RegisterForm, EditProfileForm
 from django.views.generic import ListView, DetailView, CreateView
 from .models import Post
@@ -11,6 +11,15 @@ from .models import Post
 class HomeView(ListView):
     model = Post
     template_name = 'users/dashboard.html'
+    ordering = ['-post_date']
+
+    def get_context_data(self, *args, **kwargs):
+        
+        context = super(HomeView, self).get_context_data(*args, **kwargs)
+        current_post = get_object_or_404(Post, id=self.kwargs.get('pk'))
+        total_likes = current_post.total_likes
+        context['total_likes'] = total_likes
+        return context
 
 def register(request):
     if request.method == 'GET':
@@ -41,3 +50,8 @@ class AddPostView(CreateView):
     model = Post
     template_name = 'users/add_post.html'
     fields = '__all__'
+
+def LikeView(request, pk):
+    post = get_object_or_404(Post, id=request.POST.get('post_id'))
+    post.likes.add(request.user)
+    return HttpResponseRedirect(reverse('dashboard'))
