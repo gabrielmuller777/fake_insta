@@ -6,20 +6,19 @@ from django.urls import reverse, reverse_lazy
 from .users.forms import RegisterForm, EditProfileForm
 from django.views.generic import ListView, DetailView, CreateView
 from .models import Post
-# Create your views here.
 
 class HomeView(ListView):
     model = Post
     template_name = 'users/dashboard.html'
     ordering = ['-post_date']
 
-    def get_context_data(self, *args, **kwargs):
-        
-        context = super(HomeView, self).get_context_data(*args, **kwargs)
-        current_post = get_object_or_404(Post, id=self.kwargs.get('pk'))
-        total_likes = current_post.total_likes
-        context['total_likes'] = total_likes
-        return context
+    #def get_context_data(self, *args, **kwargs):
+    #    
+    #    context = super(HomeView, self).get_context_data(*args, **kwargs)
+    #    current_post = get_object_or_404(Post, id=self.kwargs.get('pk'))
+    #    total_likes = current_post.total_likes
+    #    context['total_likes'] = total_likes
+    #    return context
 
 def register(request):
     if request.method == 'GET':
