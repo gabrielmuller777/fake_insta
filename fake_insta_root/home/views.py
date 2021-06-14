@@ -1,3 +1,4 @@
+from django.http import request
 from django.http.response import HttpResponse
 from django.shortcuts import redirect,render
 from django.contrib.auth import login
@@ -36,6 +37,7 @@ def editProfile(request):
         form = EditProfileForm(instance=request.user)
         return render(request, 'users/edit_profile.html', {'form':form})
 
-#class AddPostView(CreateView):
-#    model = Post
-#    template_name = 'add_post.html'
+class AddPostView(CreateView):
+    model = Post
+    template_name = 'users/add_post.html'
+    fields = '__all__'

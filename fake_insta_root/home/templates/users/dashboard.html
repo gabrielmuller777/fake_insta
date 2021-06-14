@@ -8,18 +8,19 @@
         <a href="{% url 'logout' %}">Logout</a>
         <a href="{% url 'password_change' %}">Change password</a>
         <a href="{% url 'edit_profile' %}">Edit Profile</a>
+        <a href="{% url 'add_post' %}">New Post</a>
+        <br>
+        <div class='container'>
+            <ul>
+            {% for post in object_list %}
+                <li>{{post.description}} | {{post.author}}<br><br>
+                {{post.body}}</li><br><hr><br>
+            {% endfor %}
+            </ul>
+        </div>
     {% else %}
         <a href="{% url 'login' %}">Login</a>
     {% endif %}
-</div>
-<br>
-<div class='container'>
-<ul>
-{% for post in object_list %}
-    <li>{{post.description}} | {{post.author}}<br><br>
-    {{post.body}}</li>
-{% endfor %}
-</ul>
 </div>
 
 {% endblock  %}
