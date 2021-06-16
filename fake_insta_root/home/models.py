@@ -22,6 +22,10 @@ class Post(models.Model):
 
     def total_likes(self):
         return self.likes.count()
+
+    def who_liked(self):
+        q1 = self.likes.all()
+        return q1
     
     def __str__(self):
         return self.description + ' | ' + str(self.author)

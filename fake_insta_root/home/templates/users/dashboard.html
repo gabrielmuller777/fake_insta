@@ -18,7 +18,12 @@
                 <br>
                 <form action="{% url 'like_post' post.pk %}" method='post'>
                     {% csrf_token %}
-                    <button type='submit' name='post_id' value='{{ post.id }}' class='btn btn-primary btn-sm'>Like</button> - {{post.total_likes}} Likes
+                    <button type='submit' name='post_id' value='{{ post.id }}' class='btn btn-primary btn-sm'>Like</button> - Liked by 
+                    {% for entry in post.who_liked  %}
+                        <span class='text-info'>
+                        {{entry.username}}
+                        </span>               
+                    {% endfor %}
                 <br>
                 <hr>
                 <br>

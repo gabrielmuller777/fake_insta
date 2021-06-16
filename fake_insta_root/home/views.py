@@ -1,6 +1,6 @@
 from django.http import request
 from django.http.response import HttpResponse, HttpResponseRedirect
-from django.shortcuts import redirect,render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth import login
 from django.urls import reverse, reverse_lazy
 from .users.forms import RegisterForm, EditProfileForm
@@ -52,5 +52,11 @@ class AddPostView(CreateView):
 
 def LikeView(request, pk):
     post = get_object_or_404(Post, id=request.POST.get('post_id'))
-    post.likes.add(request.user)
-    return HttpResponseRedirect(reverse('dashboard'))
+    Liked = False
+    if post.likes.filter(id=request.user.id).exists():
+        post.likes.remove(request.user)
+        Liked = False
+    else:
+        post.likes.add(request.user)
+        Liked = True
+    return redirect('dashboard')
