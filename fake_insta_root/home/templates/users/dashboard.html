@@ -18,12 +18,10 @@
                 <br>
                 <form id='form{{post.id}}' data-role = 'like_form' action="{% url 'like_post' post.id %}" data-url="{% url 'like_post' post.id %}" method='post'>
                     {% csrf_token %}
-                        <button type='submit' data-id='{{post.id}}' data-name='like_btn' value='{{ post.id }}' class='btn btn-danger btn-sm'>
-                            {% if liked %}
-                                Unlike
-                            {% else %}
-                                Like
-                            {% endif %}
+                        <button type='submit' id='btn{{post.id}}' data-id='{{post.id}}' data-name='like_btn' value='{{ post.id }}' class='btn btn-danger btn-sm'>
+                            <span id = 'btn_text{{post.id}}'>
+                                Porra
+                            </span>
                         </button>
                      - Liked by 
                     {% for entry in post.who_liked  %}
@@ -45,14 +43,14 @@
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script type='text/javascript'>
-    
-    $('[data-role = like_form]').on('click', '[data-name = like_btn]', function(e){
+    $(document).ready(function(event){
+        $('[data-role = like_form]').on('click', '[data-name = like_btn]', function(e){
         e.preventDefault();
         var $like_form = $(e.delegateTarget);
         var $like_btn = $(e.currentTarget);
         var url = $like_form.data('url');
         var pk =  $like_btn.data('id');
-        var formid = 'form' + pk.toString()
+        var btn = 'btn' + pk.toString()
         $.ajax({
             type: 'POST',
             url: url,
@@ -62,7 +60,8 @@
                 'action': 'post'
             },
             success: function(response){
-                document.getElementById(formid).innerHTML = response['form'],
+                //$('#dashboard').html(response['liked'])
+                document.getElementById(btn).innerText = response['liked'],
                 console.log(response)
             },
             error: function(rs, e){
@@ -70,5 +69,6 @@
             },
         });
     });
+    })
 </script>
 {% endblock  %}

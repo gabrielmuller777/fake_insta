@@ -4,6 +4,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth import login
 from django.urls import reverse, reverse_lazy
 from django.template.loader import render_to_string
+import json
 from .users.forms import RegisterForm, EditProfileForm
 from django.views.generic import ListView, DetailView, CreateView
 from .models import Post
@@ -53,13 +54,13 @@ class AddPostView(CreateView):
 
 def LikeView(request, pk):
     post = get_object_or_404(Post, id=request.POST.get('post_id'))
-    liked = False
+    liked = 'Unlike'
     if post.likes.filter(id=request.user.id).exists():
         post.likes.remove(request.user)
-        liked = False
+        liked = 'Unlike'
     else:
         post.likes.add(request.user)
-        liked = True
+        liked = 'Like'
     #return redirect('dashboard')
     if request.is_ajax():
-        return HttpResponse(liked, request)
+        return JsonResponse({'liked': liked}, safe = False)
