@@ -16,15 +16,24 @@
                 <li>{{post.description}} - {{post.author}} - {{post.post_date}}<br><br>
                 {{post.body}}</li>
                 <br>
-                <form action="{% url 'like_post' post.pk %}" method='post'>
+                <form id='form{{post.id}}' data-role = 'like_form' action="{% url 'like_post' post.id %}" data-url="{% url 'like_post' post.id %}" method='post'>
                     {% csrf_token %}
-                    <button type='submit' name='post_id' value='{{ post.id }}' class='btn btn-primary btn-sm'>Like</button> - Liked by 
+                        <button type='submit' data-id='{{post.id}}' data-name='like_btn' value='{{ post.id }}' class='btn btn-danger btn-sm'>
+                            {% if liked %}
+                                Unlike
+                            {% else %}
+                                Like
+                            {% endif %}
+                        </button>
+                     - Liked by 
                     {% for entry in post.who_liked  %}
                         <span class='text-info'>
                         {{entry.username}}
                         </span>               
                     {% endfor %}
+                </form>
                 <br>
+                post id {{post.id}} {{liked}}
                 <hr>
                 <br>
             {% endfor %}
@@ -34,5 +43,32 @@
         <a href="{% url 'login' %}">Login</a>
     {% endif %}
 </div>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type='text/javascript'>
+    
+    $('[data-role = like_form]').on('click', '[data-name = like_btn]', function(e){
+        e.preventDefault();
+        var $like_form = $(e.delegateTarget);
+        var $like_btn = $(e.currentTarget);
+        var url = $like_form.data('url');
+        var pk =  $like_btn.data('id');
+        var formid = 'form' + pk.toString()
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: {
+                'post_id': pk,
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'action': 'post'
+            },
+            success: function(response){
+                document.getElementById(formid).innerHTML = response['form'],
+                console.log(response)
+            },
+            error: function(rs, e){
+                console.log(rs.responseText);
+            },
+        });
+    });
+</script>
 {% endblock  %}
