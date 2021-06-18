@@ -54,13 +54,24 @@ class AddPostView(CreateView):
 
 def LikeView(request, pk):
     post = get_object_or_404(Post, id=request.POST.get('post_id'))
-    liked = 'Unlike'
+    liked = ''
+    q1 = post.likes.all()
+    like_count = post.likes.all().count() - 1
+    userlist = []
     if post.likes.filter(id=request.user.id).exists():
         post.likes.remove(request.user)
-        liked = 'Unlike'
+        liked = False
     else:
         post.likes.add(request.user)
-        liked = 'Like'
-    #return redirect('dashboard')
+        liked = True
+    
+    for item in q1:
+        userlist.append(' ' + item.username)
+    
+    data = {
+        'liked': liked,
+        'ulist': userlist,
+        'likecount': like_count
+    }
     if request.is_ajax():
-        return JsonResponse({'liked': liked}, safe = False)
+        return JsonResponse(data, safe = False)

@@ -24,8 +24,11 @@ class Post(models.Model):
         return self.likes.count()
 
     def who_liked(self):
+        uids=[]
         q1 = self.likes.all()
-        return q1
+        for item in q1:
+            uids.append(item.id)
+        return uids
     
     def __str__(self):
         return self.description + ' | ' + str(self.author)

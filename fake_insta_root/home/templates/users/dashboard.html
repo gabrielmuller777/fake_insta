@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{%load mathfilters%}
 {% block content %}
 
 <h2>Hello {{ user.username|default:'Guest'}}!</h2>
@@ -18,20 +18,27 @@
                 <br>
                 <form id='form{{post.id}}' data-role = 'like_form' action="{% url 'like_post' post.id %}" data-url="{% url 'like_post' post.id %}" method='post'>
                     {% csrf_token %}
-                        <button type='submit' id='btn{{post.id}}' data-id='{{post.id}}' data-name='like_btn' value='{{ post.id }}' class='btn btn-danger btn-sm'>
-                            <span id = 'btn_text{{post.id}}'>
-                                Porra
-                            </span>
+                        <button type='submit' id='btn{{post.id}}' data-id='{{post.id}}' data-name='like_btn' value='{{ post.id }}' style="background-color: transparent; border-color: transparent; cursor: pointer;">
+                            {% if user.id in post.who_liked %}
+                                <i class="bi bi-heart"></i>
+                            {% else %}
+                                <i style="color:red" class="bi bi-heart-fill"></i>
+                            {% endif %}
                         </button>
                      - Liked by 
-                    {% for entry in post.who_liked  %}
-                        <span class='text-info'>
-                        {{entry.username}}
-                        </span>               
-                    {% endfor %}
+                        <span id='listalikes{{post.id}}'  class='text-info'>
+                            {% for item in post.likes.all %}
+                                {% if forloop.first %}
+                                    {{item.username}}
+                                {% endif %}
+                            {% endfor %}
+                        </span>
+                        <span id='count{{post.id}}' class='text-dark'>
+                             and {{post.likes.all.count|sub:1}} others.
+                        </span>
                 </form>
                 <br>
-                post id {{post.id}} {{liked}}
+                post id {{post.id}}{{test}}
                 <hr>
                 <br>
             {% endfor %}
@@ -51,6 +58,8 @@
         var url = $like_form.data('url');
         var pk =  $like_btn.data('id');
         var btn = 'btn' + pk.toString()
+        var ll = 'listalikes' + pk.toString()
+        var ucount = 'count' + pk.toString()
         $.ajax({
             type: 'POST',
             url: url,
@@ -60,8 +69,16 @@
                 'action': 'post'
             },
             success: function(response){
-                //$('#dashboard').html(response['liked'])
-                document.getElementById(btn).innerText = response['liked'],
+                let name = response['ulist']
+                let is_liked = response['liked']
+                if(is_liked == true) {
+                    document.getElementById(btn).innerHTML = '<i class="bi bi-heart"></i>'
+                } else {
+                    document.getElementById(btn).innerHTML = '<i style="color:red" class="bi bi-heart-fill"></i>'
+                }
+                
+                document.getElementById(ll).innerText = name[0],
+                document.getElementById(ucount).innerText = ' and ' + (name.length -1 ) + ' others.',
                 console.log(response)
             },
             error: function(rs, e){
